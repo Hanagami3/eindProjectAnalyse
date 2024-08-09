@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:User open personal profile;
+:User can view personal information;
+fork
+  if (User update personal information?) then (yes)
+    :User redirect to page to update information;
+    while (User update information) is (not correct information)
+    : ask the guest to complete their information again;
+    endwhile(correct information)
+  else (no)
+    :user stay in personal profile;
+  endif
+fork again
+ if (User exits personal profil) then (yes)
+    if (Are you sur?) then (yes)
+        stop
+    else (no)
+        :User is redirected to personal profile;
+    endif
+ else (no)
+    :user stay in personal profile;
+ endif
+
+end fork
+:User exits personal profil;
+stop
+@enduml

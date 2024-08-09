@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+left to right direction
+actor Admin as a
+
+package game {
+  usecase "play new game" as UC1
+  usecase "look score" as UC2
+  usecase "update game" as UC3
+}
+
+package site {
+
+
+  usecase "view profil" as UC4
+  usecase "view posts" as UC5
+  usecase "view calendar" as UC6
+  usecase "write post" as UC7
+  usecase "write comment" as UC8
+  usecase "write private message" as UC9
+  usecase "write to every user" as UC10
+  usecase "update his own profile" as UC11
+  usecase "update his own post" as UC12
+  usecase "update his own comment" as UC13
+  usecase "update calendar" as UC14
+  usecase "delete other profil" as UC15
+  usecase "delete other post" as UC16
+  usecase "delete other comment" as UC17
+  usecase "like / dislike" as UC18
+  usecase "research" as UC19
+
+}
+
+a --> UC1
+a --> UC2
+a --> UC3
+a --> UC4
+a --> UC5
+a --> UC6
+a --> UC7
+a --> UC8
+a --> UC9
+a --> UC10
+a --> UC11
+a --> UC12
+a --> UC13
+a --> UC14
+a --> UC15
+a --> UC16
+a --> UC17
+a --> UC18
+a --> UC19
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+start
+:Admin logs into the system;
+:Admin navigates to calendar management;
+:Admin selects the calendar entry to update;
+:Admin chooses to edit the entry;
+
+if (Entry exists?) then (yes)
+    :Admin updates entry details (date, time, description, etc.);
+    :System validates updated entry details;
+        :System updates the calendar with new details;
+        :System confirms update;
+
+
+else (no)
+    :Display "Entry does not exist" message to Admin;
+    :Allow Admin to select a different entry or create a new one;
+endif
+:"Update successful" message to Admin;
+        :Allow Admin to correct details;
+stop
+@enduml

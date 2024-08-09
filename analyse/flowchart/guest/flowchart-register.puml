@@ -1,0 +1,12 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Guest open register page;
+while (the guest completes all fields requested) is (not correct information)
+: ask the guest to complete their information again;
+endwhile(correct information)
+:login successfull;
+stop
+
+@enduml

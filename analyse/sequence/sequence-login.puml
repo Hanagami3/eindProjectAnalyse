@@ -1,0 +1,51 @@
+@startuml
+actor User
+participant "UserInterface" as UI
+participant "EmailValidator" as EmailValidator
+participant "PasswordValidator" as PasswordValidator
+participant "AuthenticationController" as AuthController
+participant "UserService" as UserService
+participant "UserRepository" as UserRepo
+database "Users" as UsersDB
+
+User -> UI: Go to login page
+UI -> User: Displays login form
+User -> UI: Fill in email
+UI -> EmailValidator: validateEmail(validEmail)
+alt Invalid Email
+    EmailValidator --> UI: return false
+    UI -> User: Display "Invalid email" message
+else Valid Email
+    EmailValidator --> UI: return true
+    UI -> User: Display "valid email" message
+    User -> UI: Fill in password
+    UI -> PasswordValidator: validatePassword(validPassword)
+    alt Invalid Password
+        PasswordValidator -> UI: return false
+        UI -> User: Display "Invalid password" message
+    else Valid Password
+        PasswordValidator -> UI: return true
+        UI -> User: display valide password
+        User -> UI: submit registration form
+        UI -> AuthController: login(UseDTO userDTO)
+        AuthController -> UserService: login(LoginRequest loginRequest)
+        UserService -> UserRepo: findById(User user)
+        UserRepo -> UsersDB: findById(User user)
+        alt login failed
+            UsersDB --> UserRepo: Return Optional<User>
+            UserRepo --> UserService: Return Optional<User>
+            UserService --> AuthController: Return execution
+            AuthController --> UI: return ExceptionHandler
+            UI -> User: display error message
+        else Login success
+            UsersDB --> UserRepo: Return Optional<User>
+            UserRepo --> UserService: Return Optional<User>
+            UserService --> AuthController: Return LoginResponse
+            AuthController --> UI: return responseEntity
+            UI -> User: display error message
+            UI -> Use: Display validation message
+            UI -> user: User is redirected to main page
+        end
+    end
+end
+@enduml

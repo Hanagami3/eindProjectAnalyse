@@ -1,0 +1,37 @@
+@startuml
+actor User
+participant "UserInterface" as UI
+participant "PostController" as PostController
+participant "PostService" as PostService
+participant "PostRepository" as PostRepo
+database "PostsDatabase" as PostsDB
+
+User -> UI: Go to create post page
+UI -> User: Display create post form
+User -> UI: Enter post content (text, image, etc.)
+User -> UI: Submit post
+UI -> PostController: createPost(PostDTO postDTO)
+
+alt Invalid Post Content
+    PostController --> UI: Return validation error
+    UI -> User: Display "Invalid post content" message
+else Valid Post Content
+    PostController -> PostService: validateAndCreatePost(PostRequest postRequest)
+    PostService -> PostRepo: save(Post post)
+
+    alt Save Operation Fails
+        PostRepo --> PostService: Return exception
+        PostService --> PostController: Return failure response
+        PostController --> UI: Return error message
+        UI -> User: Display "Failed to create post" message
+    else Save Operation Succeeds
+        PostRepo -> PostsDB: Insert post data
+        PostsDB --> PostRepo: Return success
+        PostRepo --> PostService: Return saved Post
+        PostService --> PostController: Return PostResponse
+        PostController --> UI: Return success message
+        UI -> User: Display "Post created successfully"
+        UI -> User: Redirect to post view page
+    end
+end
+@enduml

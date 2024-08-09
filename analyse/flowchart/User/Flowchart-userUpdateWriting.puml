@@ -1,0 +1,37 @@
+@startuml
+
+start
+:User logs into the platform;
+:User navigates to the post or comment to update;
+
+fork
+  :User selects the post;
+  :User clicks on the "Edit Post" button;
+  :User makes changes to the post content;
+  :User clicks on the "Save Changes" button;
+  if (Update successful?) then (yes)
+    :Display success message;
+  else (no)
+    :Display error message;
+    floating note right: more details in create post
+    :Allow user to retry update;
+  endif
+fork again
+  :User selects the comment;
+  :User clicks on the "Edit Comment" button;
+  :User makes changes to the comment content;
+  :User clicks on the "Save Changes" button;
+  if (Update successful?) then (yes)
+    :Display success message;
+  else (no)
+    :Display error message;
+        floating note right: more details in create comment
+
+    :Allow user to retry update;
+
+  endif
+end fork
+
+stop
+
+@enduml

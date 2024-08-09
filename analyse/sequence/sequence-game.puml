@@ -1,0 +1,31 @@
+@startuml
+
+actor Player
+participant "GameLauncher" as Launcher
+participant "GameLevel" as Level
+participant "Player" as P
+participant "Enemy" as E
+
+Player -> Launcher: Start Game
+Launcher -> Launcher: Show Main Menu
+Player -> Launcher: Choose to Play
+Launcher -> Level: Initialize Level
+Level -> P: Initialize Player
+Level -> E: Initialize Enemies
+P -> Level: Play Level
+E -> P: Attack Player
+Level -> P: Update Player Status
+Level -> E: Update Enemies Status
+alt Level Completed
+    Level -> Launcher: Show Level Results
+    Player -> Launcher: Choose to Play Again or Quit
+    alt Play Again
+        Launcher -> Level: Restart Level
+    else Quit
+        Launcher -> Launcher: Exit Game
+    end
+else Continue Playing
+    P -> Level: Continue Interaction
+end
+
+@enduml

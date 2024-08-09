@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:Guest open login page;
+while (User fill username and password)
+if (ask the user will a new password) then (true)
+    :send a new password to his mailbox;
+else (false)
+endif
+endwhile(good password)
+:login successfull;
+stop
+@enduml

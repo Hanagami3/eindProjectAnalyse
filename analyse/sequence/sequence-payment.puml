@@ -1,0 +1,41 @@
+@startuml
+actor User
+participant "UserInterface" as UI
+participant "PaymentController" as PaymentController
+participant "PaymentService" as PaymentService
+participant "PaymentRepository" as PaymentRepo
+database "PaymentsDatabase" as PaymentsDB
+
+User -> UI: Go to creator's profile page
+UI -> User: Display profile page
+User -> UI: Click on payment button
+UI -> User: Display payment options
+User -> UI: Choose amount
+UI -> PaymentController: initiatePayment(Amount amount)
+
+PaymentController -> PaymentService: processPayment(Amount amount)
+PaymentService -> PaymentRepo: validatePaymentDetails(Amount amount)
+alt Payment details valid
+    PaymentRepo -> PaymentsDB: Record transaction (Amount amount)
+    alt Payment successful
+        PaymentsDB --> PaymentRepo: Transaction recorded
+        PaymentRepo --> PaymentService: Return success
+        PaymentService --> PaymentController: Payment success
+        PaymentController -> UI: Notify success
+        UI -> User: Show success message
+    else Payment failed
+        PaymentsDB --> PaymentRepo: Return failure (or rollback)
+        PaymentRepo --> PaymentService: Return exception
+        PaymentService --> PaymentController: Payment failure
+        PaymentController -> UI: Notify error
+        UI -> User: Show error message
+        UI -> User: Prompt retry option
+    end
+else Payment details invalid
+    PaymentRepo --> PaymentService: Return validation exception
+    PaymentService --> PaymentController: Return validation error
+    PaymentController -> UI: Notify validation error
+    UI -> User: Show validation error message
+end
+
+@enduml

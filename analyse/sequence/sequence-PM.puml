@@ -1,0 +1,37 @@
+@startuml
+actor User
+participant "UserInterface" as UI
+participant "MessageController" as MessageController
+participant "MessageService" as MessageService
+participant "MessageRepository" as MessageRepo
+database "MessagesDatabase" as MessagesDB
+
+User -> UI: Go to message page
+UI -> User: Display message form
+User -> UI: Enter message content (text, attachments, etc.)
+User -> UI: Submit message
+UI -> MessageController: createMessage(MessageDTO messageDTO)
+
+alt Invalid Message Content
+    MessageController --> UI: Return validation error
+    UI -> User: Display "Invalid message content" message
+else Valid Message Content
+    MessageController -> MessageService: validateAndCreateMessage(MessageRequest messageRequest)
+    MessageService -> MessageRepo: save(Message message)
+
+    alt Save Operation Fails
+        MessageRepo --> MessageService: Return exception
+        MessageService --> MessageController: Return failure response
+        MessageController --> UI: Return error message
+        UI -> User: Display "Failed to send message" message
+    else Save Operation Succeeds
+        MessageRepo -> MessagesDB: Insert message data
+        MessagesDB --> MessageRepo: Return success
+        MessageRepo --> MessageService: Return saved Message
+        MessageService --> MessageController: Return MessageResponse
+        MessageController --> UI: Return success message
+        UI -> User: Display "Message sent successfully"
+        UI -> User: Redirect to message view page
+    end
+end
+@enduml

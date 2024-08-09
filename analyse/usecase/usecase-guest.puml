@@ -1,0 +1,24 @@
+@startuml
+left to right direction
+actor Guest as g
+
+package game {
+  usecase "play new game" as UC1
+  usecase "view score" as UC2
+
+}
+
+package site {
+
+  usecase "register" as UC3
+  usecase "login" as UC4
+  usecase "view posts" as UC5
+
+}
+
+g --> UC1
+g --> UC2
+g --> UC3
+g --> UC4
+g --> UC5
+@enduml

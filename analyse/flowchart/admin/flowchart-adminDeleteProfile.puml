@@ -1,0 +1,17 @@
+@startuml
+start
+:Admin logs into the system;
+:Admin selects the user profile to delete;
+
+    if (Admin confirms deletion?) then (yes)
+        :System deletes the user profile;
+        :System confirms deletion;
+    else (no)
+        :Cancel deletion process;
+        :Display "Deletion canceled" message to Admin;
+        stop
+    endif
+:Display "Profile successfully deleted" message to Admin;
+
+stop
+@enduml

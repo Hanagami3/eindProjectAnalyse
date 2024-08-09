@@ -1,0 +1,38 @@
+@startuml
+actor Admin
+participant "UserInterface" as UI
+participant "CalendarController" as CalendarController
+participant "CalendarService" as CalendarService
+participant "CalendarRepository" as CalendarRepo
+database "CalendarDatabase" as CalendarDB
+
+Admin -> UI: Log in
+UI -> Admin: Display admin dashboard
+
+Admin -> UI: Select calendar entry to update
+UI -> CalendarController: getEntryCalendar(entryId)
+CalendarController -> CalendarRepo: getEntry(entryId)
+CalendarRepo -> CalendarDB: Retrieve entry details
+CalendarDB --> CalendarRepo: Return entry details
+CalendarRepo --> CalendarController: Return entry details
+CalendarController --> UI: Display entry details for editing
+
+Admin -> UI: Edit entry details (date, time, description)
+UI -> CalendarController: updateEntry(entryId, updatedDetails)
+
+CalendarController -> CalendarService: validateEntryDetails(updatedDetails)
+alt Validation successful
+    CalendarService -> CalendarRepo: updateEntry(entryId, updatedDetails)
+    CalendarRepo -> CalendarDB: Update entry details
+    CalendarDB --> CalendarRepo: Return success
+    CalendarRepo --> CalendarService: Return success
+    CalendarService --> CalendarController: Update successful
+    CalendarController --> UI: return validation message
+    UI --> Admin: Display "Update successful" message
+else Validation failed
+    CalendarService --> CalendarController: Return validation exception
+    CalendarController --> UI: return error message
+    UI --> Admin: Display "Update unsuccessful" message
+
+end
+@enduml

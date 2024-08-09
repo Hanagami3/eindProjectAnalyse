@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:the Guest  enters the game menu;
+:the Guest clicks "play new game";
+:the Guest chose his difficulty level;
+while (the Guest plays) is (game over)
+if (request for new game ) then (yes)
+else(no)
+break
+endif
+endwhile(completed game)
+if (ask the Guest if he wants to go to the registration page) then (yes)
+: Redirect to registration page;
+stop
+else (no)
+:quit the game;
+stop
+
+@enduml

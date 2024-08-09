@@ -1,0 +1,43 @@
+@startuml
+actor Admin
+participant "UserInterface" as UI
+participant "UserController" as UserController
+participant "UserService" as UserService
+participant "UserRepository" as UserRepo
+database "UserDatabase" as UserDB
+
+== Début de la Suppression ==
+Admin -> UI: Login
+UI -> Admin: Display admin dashboard
+Admin -> UI: Navigate to user management
+UI -> Admin: Display user management page
+
+
+Admin -> UI: Select user profile
+UI -> UserController: selectUserProfile(userId)
+alt Profile exists
+    UserController -> UserService: getUserDetails(userId)
+    UserService -> UserRepo: findUserById(userId)
+    UserRepo --> UserService: Return user details
+    UserService --> UserController: Return user details
+    UserController --> UI: Display user details
+    Admin -> UI: Confirm deletion
+    UI -> UserController: confirmDeletion(userId)
+    UserController -> UserService: deleteUser(userId)
+    UserService -> UserRepo: deleteUser(userId)
+    UserRepo -> UserDB : delete post data
+    alt Deletion successful
+        UserRepo --> UserService: Return success
+        UserService --> UserController: Return success
+        UserController --> UI: Display "Profile successfully deleted"
+    else Deletion failed
+        UserRepo --> UserService: Return failure
+        UserService --> UserController: Return failure
+        UserController --> UI: Display "Profile deletion failed"
+    end
+else Profile does not exist
+    "UserService" --> "UserController" : return exception
+    UserController --> UI: Display "Profile does not exist"
+end
+
+@enduml

@@ -1,0 +1,325 @@
+@startuml
+
+left to right direction
+
+package "Controller"{
+    class UserController {
+        -userService: UserService
+        -privateMessageService: PrivateMessageService
+        -postService: PostService
+        -commentService: CommentService
+    }
+
+    class AdminController {
+        -adminService: AdminService
+        -userService: UserService
+        -eventService: EventService
+    }
+
+    class PostController {
+        -postService: PostService
+        -commentService: CommentService
+        -likeService: LikeService
+    }
+
+    class CommentController {
+        -commentService: CommentService
+        -likeService: LikeService
+    }
+
+    class EventController {
+        -eventService: EventService
+        -gameService: GameService
+    }
+
+    class PrivateMessageController {
+        -privateMessageService: PrivateMessageService
+        -userService: UserService
+    }
+
+    class LikeController {
+        -likeService: LikeService
+        -postService: PostService
+        -commentService: CommentService
+    }
+
+    class LoginController {
+            -authenticationManager: AuthenticationManager
+            -jwtTokenProvider: JwtTokenProvider
+    }
+
+    class RegistrationController {
+        -userService: UserService
+        -passwordEncoder: PasswordEncoder
+    }
+}
+
+package "Service" {
+
+    class UserService {
+        -userRepository: UserRepository
+        -privateMessageRepository: PrivateMessageRepository
+        -postRepository: PostRepository
+        -commentRepository: CommentRepository
+    }
+
+    class AdminService {
+        -userRepository: UserRepository
+        -eventRepository: EventRepository
+        -gameRepository: GameRepository
+    }
+
+    class PostService {
+        -postRepository: PostRepository
+        -commentRepository: CommentRepository
+        -likeRepository: LikeRepository
+    }
+
+    class CommentService {
+        -commentRepository: CommentRepository
+        -likeRepository: LikeRepository
+        -postRepository: PostRepository
+    }
+
+    class EventService {
+        -eventRepository: EventRepository
+        -gameRepository: GameRepository
+    }
+
+    class PrivateMessageService {
+        -privateMessageRepository: PrivateMessageRepository
+        -userRepository: UserRepository
+    }
+
+    class LikeService {
+        -likeRepository: LikeRepository
+        -postRepository: PostRepository
+        -commentRepository: CommentRepository
+    }
+}
+
+package "Exception" {
+    class GlobalExceptionHandler {
+        +handleException(Exception e): ResponseEntity
+    }
+    class NotFoundException extends RuntimeException { }
+    class UnauthorizedException extends RuntimeException { }
+    class ValidationException extends RuntimeException { }
+}
+
+package "Security" {
+
+    class SecurityConfig {
+        -authenticationManager: AuthenticationManager
+        -passwordEncoder: PasswordEncoder
+        -jwtTokenProvider: JwtTokenProvider
+    }
+
+    class JwtTokenProvider {
+        -secretKey: String
+        -validityInMilliseconds: long
+    }
+
+    class AuthFilter extends OncePerRequestFilter {
+        -jwtTokenProvider: JwtTokenProvider
+
+        +doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain): void
+    }
+
+    SecurityConfig --> JwtTokenProvider
+    AuthFilter --> JwtTokenProvider
+    SecurityConfig <|-- AuthFilter
+
+}
+
+package "Repository" {
+
+    interface UserRepository {
+        +findAll(): List<User>
+        +findById(id: Long): Optional<User>
+        +save(user: User): User
+        +deleteById(id: Long): void
+    }
+
+    interface AdminRepository {
+        +findAll(): List<Admin>
+        +findById(id: Long): Optional<Admin>
+        +save(admin: Admin): Admin
+        +deleteById(id: Long): void
+    }
+
+    interface PostRepository {
+        +findAll(): List<Post>
+        +findById(id: Long): Optional<Post>
+        +save(post: Post): Post
+        +deleteById(id: Long): void
+    }
+
+    interface CommentRepository {
+        +findAll(): List<Comment>
+        +findById(id: Long): Optional<Comment>
+        +save(comment: Comment): Comment
+        +deleteById(id: Long): void
+    }
+
+    interface EventRepository {
+        +findAll(): List<Event>
+        +findById(id: Long): Optional<Event>
+        +save(event: Event): Event
+        +deleteById(id: Long): void
+    }
+
+    interface PrivateMessageRepository {
+        +findAll(): List<PrivateMessage>
+        +findById(id: Long): Optional<PrivateMessage>
+        +save(message: PrivateMessage): PrivateMessage
+        +deleteById(id: Long): void
+    }
+
+    interface LikeRepository {
+        +findAll(): List<Like>
+        +findById(id: Long): Optional<Like>
+        +save(like: Like): Like
+        +deleteById(id: Long): void
+    }
+
+    interface GameRepository {
+        +findAll(): List<Game>
+        +findById(id: Long): Optional<Game>
+        +save(game: Game): Game
+        +deleteById(id: Long): void
+    }
+}
+
+package "Model" {
+
+    class User {
+        +userId: Long
+        +username: String
+        +email: String
+        +password: String
+    }
+
+    class Admin {
+        +adminId: Long
+        +userId: Long
+    }
+
+    class Game {
+        +gameId: Long
+        +title: String
+        +genre: String
+    }
+
+    class Post {
+        +postId: Long
+        +userId: Long
+        +content: String
+        +timestamp: Date
+    }
+
+    class Comment {
+        +commentId: Long
+        +postId: Long
+        +userId: Long
+        +content: String
+        +timestamp: Date
+    }
+
+    class PrivateMessage {
+        +messageId: Long
+        +senderId: Long
+        +receiverId: Long
+        +content: String
+        +timestamp: Date
+    }
+
+    class Like {
+        +likeId: Long
+        +userId: Long
+        +postId: Long
+        +commentId: Long
+    }
+
+    class Event {
+        +eventId: Long
+        +gameId: Long
+        +title: String
+        +date: Date
+    }
+}
+
+package "GameLaunch" {
+    class GameLauncher {
+        +launchGame(): void
+        +showMainMenu(): void
+    }
+
+    class PlayerSettings {
+        +difficulty: String
+        +controlScheme: String
+        +audioSettings: String
+    }
+}
+
+package "GameCore" {
+    class Player {
+        +playerId: Long
+        +name: String
+        +score: int
+        +position: String
+        +move(): void
+    }
+
+    class GameLevel {
+        +levelId: Long
+        +levelName: String
+        +startLevel(): void
+    }
+
+    class Enemy {
+        +enemyId: Long
+        +type: String
+        +attackPlayer(): void
+    }
+
+    class GameItem {
+        +itemId: Long
+        +name: String
+        +useItem(): void
+    }
+}
+
+Controller --> Service
+Controller --> Security
+Controller --> Exception
+Controller --> GameLaunch
+Service --> Repository
+Repository --> Model
+Service --> Exception
+GameLaunch --> GameCore
+
+
+User "1" -- "*" Post
+User "1" -- "*" Comment
+User "1" -- "*" PrivateMessage
+User "1" -- "*" Like
+
+
+Post "1" -- "*" Comment
+Post "1" -- "*" Like
+
+Comment "1" -- "*" Like
+
+Game "1" -- "1" User
+
+Event "1" -- "*" User
+Event "1" -- "*" Like
+Event "1" -- "*" Comment
+
+GameLauncher --> PlayerSettings
+GameLevel --> Player
+GameLevel --> Enemy
+GameLevel --> GameItem
+@enduml
+

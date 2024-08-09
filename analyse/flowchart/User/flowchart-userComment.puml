@@ -1,0 +1,29 @@
+@startuml
+
+start
+:User logs into the platform;
+:User navigates to the post or event page;
+
+:User writes the comment content;
+
+if (User wants to add an attachment?) then (no)
+  :Publish comment without attachment;
+else (yes)
+  :User clicks on the button and chooses the file;
+  repeat
+    :Check attachment format;
+    if (Format correct?) then (yes)
+      :Accept the attachment;
+      break
+    else (no)
+      :Reject the attachment;
+      :Notify user of incorrect format;
+    endif
+  repeat while (Format incorrect)
+  :Attach the file to the comment;
+endif
+
+:Publish the comment;
+stop
+
+@enduml

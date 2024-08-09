@@ -1,0 +1,49 @@
+@startuml
+actor User
+participant "UserInterface" as UI
+participant "EmailValidator" as EmailValidator
+participant "PasswordValidator" as PasswordValidator
+participant "AuthenticationController" as AuthController
+participant "UserService" as UserService
+participant "UserRepository" as UserRepo
+database "Users" as UsersDB
+
+User -> UI: Go to registration page
+UI -> User: Display registration form
+User -> UI: Fill in email
+UI -> EmailValidator: validateEmail(validEmail)
+alt Invalid Email
+    EmailValidator --> UI: return false
+    UI -> User: Display "Invalid email" message
+else Valid Email
+    EmailValidator --> UI: return true
+    UI -> User: Display "valid email" message
+    User -> UI: Fill in password
+    UI -> PasswordValidator: validatePassword(validPassword)
+    alt Invalid Password
+        PasswordValidator -> UI: return false
+        UI -> User: Display "Invalid password" message
+    else Valid Password
+        PasswordValidator -> UI: return true
+        UI -> User: display "valid password" message
+        User -> UI: submit registration form
+        UI -> AuthController: register(UseDTO userDTO)
+        AuthController -> UserService: addUser(RegisterRequest registerRequest)
+        UserService -> UserRepo: checkIfUserExists(User user)
+        alt User already exists
+            UserRepo --> UserService: return UserExistsException
+            UserService --> AuthController: return exception
+            AuthController --> UI: return ExceptionHandler
+            UI -> User: display "User already exists" message
+        else New user
+            UserRepo -> UsersDB: save(User user)
+            UsersDB --> UserRepo: return User
+            UserRepo --> UserService: return User
+            UserService --> AuthController: Return return mapToUSerDTO(user)
+            AuthController --> UI: return responseEntity
+            UI -> User: Display registration success message
+            UI -> User: User is redirected to login page
+        end
+    end
+end
+@enduml

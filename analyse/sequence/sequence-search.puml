@@ -1,0 +1,27 @@
+@startuml
+
+actor User
+participant "UserInterface" as UI
+participant "SearchController" as SearchController
+participant "ProfileController" as ProfileController
+participant "PostController" as PostController
+participant "EventController" as EventController
+
+User -> UI: Enter search query
+UI -> SearchController: search(query: String)
+SearchController -> SearchController: Process search query
+
+alt Profile found
+    SearchController -> ProfileController: redirectToProfile(profileId: Long)
+    ProfileController -> UI: Display profile
+else Post found
+    SearchController -> PostController: redirectToPost(postId: Long)
+    PostController -> UI: Display post
+else Event found
+    SearchController -> EventController: redirectToEvent(eventId: Long)
+    EventController -> UI: Display event
+else No results found
+    SearchController -> UI: Display "No results found" message
+end
+
+@enduml

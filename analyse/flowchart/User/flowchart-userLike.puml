@@ -1,0 +1,15 @@
+@startuml
+
+start
+:User wants to like a post, comment of event;
+if (Post liked?) then (yes)
+  :User clicks on the "Like" button to remove like;
+  :Decrement like count;
+else (no)
+  :User clicks on the "Like" button to add like;
+  :Increment like count;
+endif
+
+stop
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:User want to send a PM;
+fork
+    :User opens other user profile;
+    :User clicks on the button send a PM;
+fork again
+    :User open his mail box;
+    fork
+    :User click on the new mail button ;
+    fork again
+    :User click on a email;
+    :User click on the answer button;
+    end fork
+end fork
+:User writes his mail;
+
+if (User wants to add attachment?) then (no)
+
+else (yes)
+  :User clicks on the button and chooses the file;
+  repeat
+    :Check attachment format;
+    if (Format correct?) then (yes)
+      :Accept the attachment;
+      break
+    else (no)
+
+    endif
+  repeat while (Format incorrect)
+  :Attach the file;
+endif
+
+:Send the mail;
+stop
+@enduml

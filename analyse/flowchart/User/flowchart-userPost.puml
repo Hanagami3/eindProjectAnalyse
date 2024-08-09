@@ -1,0 +1,30 @@
+@startuml
+
+start
+:User logs into the platform;
+:User navigates to profile page;
+
+:User writes the post content;
+:User adds hashtags (optional);
+
+if (User wants to add an attachment?) then (no)
+  :Post without attachment;
+else (yes)
+  :User clicks on the button and chooses the file;
+  repeat
+    :Check attachment format;
+    if (Format correct?) then (yes)
+      :Accept the attachment;
+      break
+    else (no)
+      :Reject the attachment;
+      :Notify user of incorrect format;
+    endif
+  repeat while (Format incorrect)
+  :Attach the file to the post;
+endif
+
+:Publish the post;
+stop
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+while (the user enters an input in the search bar);
+:The result is not acceptable to the user;
+endwhile
+:The result is acceptable to the user;
+fork
+  :input redirects to a profile;
+fork again
+  :input redirects to a post;
+fork again
+  :input redirects to an evenement;
+end fork
+stop
+
+@enduml

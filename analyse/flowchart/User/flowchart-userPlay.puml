@@ -1,0 +1,22 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+start
+:the user enters the game menu;
+:the user clicks "play new game";
+:the user chose his difficulty level;
+while (the user plays) is (game over)
+if (request for new game ) then (yes)
+else(no)
+break
+endif
+endwhile(completed game)
+:score is added to the score table;
+fork
+  :user can post his score on his page;
+fork again
+  :user can send pm with his score;
+end fork
+stop
+
+@enduml

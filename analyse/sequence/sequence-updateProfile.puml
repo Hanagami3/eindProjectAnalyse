@@ -1,0 +1,43 @@
+@startuml
+actor User
+participant "UserInterface" as UI
+participant "ValidationService" as ValidationService
+participant "AuthenticationController" as AuthController
+participant "UserService" as UserService
+participant "UserRepository" as UserRepo
+database "Users" as UsersDB
+
+User -> UI: Go to personal information page
+UI -> User: Display current information
+User -> UI: Update personal information
+UI -> ValidationService: Validate updated information
+
+alt Invalid Information
+    ValidationService --> UI: return false
+    UI -> User: Display "Invalid information" message
+else Valid Information
+    ValidationService --> UI: return true
+    User -> UI: Submit updated information
+    UI -> AuthController: updateUserInfo(UpdateDTO userDTO)
+    AuthController -> UserService: updateUserInfo(UpdateRequest updateRequest)
+    UserService -> UserRepo: findById(User user)
+    UserRepo -> UsersDB: Find user by ID
+    UsersDB --> UserRepo: Return User
+    UserRepo --> UserService: Return User
+
+    alt User not found
+        UserService --> AuthController: Return UserNotFoundException
+        AuthController --> UI: return ExceptionHandler
+        UI -> User: Display "User not found" message
+    else User found
+        UserService -> UserRepo: Save updated User
+        UserRepo -> UsersDB: Update user information
+        UsersDB --> UserRepo: Return success
+        UserRepo --> UserService: Return updated User
+        UserService --> AuthController: Return UpdateResponse
+        AuthController --> UI: Return responseEntity
+        UI -> User: Display "Information updated successfully"
+        UI -> User: Redirect to profile page
+    end
+end
+@enduml

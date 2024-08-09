@@ -1,0 +1,22 @@
+@startuml
+
+start
+:User wants to give a payment to the creator;
+:User goes to their profile page;
+:User clicks on the payment button;
+:User chooses an amount;
+
+repeat
+  :Process payment;
+  if (Payment successful?) then (yes)
+    break
+  else (no)
+    :Display error message;
+    :Allow user to retry payment;
+  endif
+repeat while (User chooses to retry payment)
+:Display payment successful message;
+
+stop
+
+@enduml
